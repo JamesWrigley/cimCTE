@@ -11,7 +11,13 @@ local COMPILER, CPRE = cpp2ffi.GetScriptArgs({},...)
 --str_subst
 local pat = [[ \t{%[%(]]
 local str_subst = {
-	[pat] = [[ \t\x7B[(]]
+	[pat] = [[ \t\x7B[(]],
+	--SquiggleStyle::background would clash with Color::background in C
+	["(enum[%s%w]-SquiggleStyle%s*)(%b{})"] = function(head, body)
+		return head..body:gsub("([%a_][%w_]*)", "SquiggleStyle_%1")
+	end,
+	--and rename its qualified uses to match (e.g. in default arguments)
+	["SquiggleStyle::([%a_][%w_]*)"] = "SquiggleStyle::SquiggleStyle_%1",
 }
 --------------------------------------------------------------------------
 --this table has the functions to be skipped in generation
@@ -92,11 +98,10 @@ local modulename = "cimCTE"
 local headerst = [[
 #include "../ImGuiColorTextEdit/TextDiff.h"
 #include "../ImGuiColorTextEdit/extras/TrieAutoComplete.h"
-#include "../ImGuiColorTextEdit/extras/Notifications.h"
 ]]
 
 cpp2ffi.save_data("headers.h",headerst)
-local parser1 = parseImGuiHeader("headers.h", {[[TextEditor]],[[TextDiff]],[[TrieAutoComplete]],[[Notifications]]}, modulename)
+local parser1 = parseImGuiHeader("headers.h", {[[TextEditor]],[[TextDiff]],[[TrieAutoComplete]]}, modulename)
 os.remove"headers.h"
 parser1:do_parse()
 parser1:cimgui_generation(cimgui_header)
