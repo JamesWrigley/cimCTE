@@ -1406,6 +1406,19 @@ CIMGUI_API void AutoCompleteState_AddSuggestion(AutoCompleteState* self,const ch
         self->labels.emplace_back(suggestion);
     }
 }
+CIMGUI_API size_t AutoCompleteState_GetSuggestionCount(AutoCompleteState* self)
+{
+    return self->suggestions.size();
+}
+CIMGUI_API const char* AutoCompleteState_GetSuggestion(AutoCompleteState* self,size_t index)
+{
+    return index < self->suggestions.size() ? self->suggestions[index].c_str() : nullptr;
+}
+CIMGUI_API const char* AutoCompleteState_GetLabel(AutoCompleteState* self,size_t index)
+{
+    // AddSuggestion() keeps labels either empty or one per suggestion
+    return index < self->labels.size() ? self->labels[index].c_str() : nullptr;
+}
 CIMGUI_API void AutoCompleteState_SetSuggestionsPromise(AutoCompleteState* self,bool value)
 {
     self->suggestionsPromise = value;

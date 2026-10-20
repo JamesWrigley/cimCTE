@@ -552,6 +552,11 @@ CIMGUI_API void* AutoCompleteState_GetUserData(AutoCompleteState* self);
 CIMGUI_API void AutoCompleteState_ClearSuggestions(AutoCompleteState* self);
 //label is shown in the popup instead of the suggestion, it can be NULL
 CIMGUI_API void AutoCompleteState_AddSuggestion(AutoCompleteState* self,const char* suggestion,const char* label);
+CIMGUI_API size_t AutoCompleteState_GetSuggestionCount(AutoCompleteState* self);
+//index is 0-based, returns NULL if it's out of range
+CIMGUI_API const char* AutoCompleteState_GetSuggestion(AutoCompleteState* self,size_t index);
+//returns NULL if there are no labels or index is out of range
+CIMGUI_API const char* AutoCompleteState_GetLabel(AutoCompleteState* self,size_t index);
 CIMGUI_API void AutoCompleteState_SetSuggestionsPromise(AutoCompleteState* self,bool value);
 //labels can be NULL, otherwise it must have count entries
 CIMGUI_API void TextEditor_SetAutoCompleteSuggestions_array(TextEditor* self,const char** suggestions,const char** labels,size_t count);
